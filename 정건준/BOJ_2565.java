@@ -48,7 +48,7 @@ public class BOJ_2565 {
         for(int i=1; i<N; i++) {
             int maxDp = 0;
             for(int j=i-1; j>=0; j--) {
-                if(lines[j].s < lines[i].s && lines[j].e < lines[i].e) {
+                if(lines[j].e < lines[i].e) {
                     maxDp = Math.max(maxDp, dp[j]);
                 }
             }
