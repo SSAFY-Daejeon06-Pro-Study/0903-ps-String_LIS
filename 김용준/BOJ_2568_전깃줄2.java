@@ -42,8 +42,8 @@ public class BOJ_2568_전깃줄2 {
     static Pair[] pairs;
     static Pair[] LIS;
     static class Pair {
-        int a, b;
-        Pair prev;
+        int a, b; // A전봇대 위치, B전봇대 위치
+        Pair prev; // 현재 전깃줄의 이전 값으로 가능한 노드 중 하나
 
         public Pair(int a, int b) {
             this.a = a;
@@ -71,16 +71,16 @@ public class BOJ_2568_전깃줄2 {
         LIS[1] = pairs[0];
         int length = 1;
         for (int i = 1; i < N; i++) {
-            int idx;
-            if (LIS[length].b < pairs[i].b) idx = ++length;
-            else idx = binarySearchLowerBound(pairs[i].b, length);
+            int idx; // 현재 값이 LIS 배열에 들어가는 인덱스
+            if (LIS[length].b < pairs[i].b) idx = ++length; // LIS 가장 큰 값보다 현재 값이 크다면 뒤에 붙임
+            else idx = binarySearchLowerBound(pairs[i].b, length); // 그렇지 않다면 lower-bound로 위치 탐색
             LIS[idx] = pairs[i];
-            pairs[i].prev = LIS[idx - 1];
+            pairs[i].prev = LIS[idx - 1]; // 역추적하기 위해 현재 전깃줄의 이전 LIS 값을 저장해놓음
         }
 
         StringBuilder sb = new StringBuilder();
-        sb.append(N - length).append('\n');
-        HashSet<Integer> set = new HashSet<>();
+        sb.append(N - length).append('\n'); // 제거해야 하는 전깃줄 수 = 전체 전깃줄 - LIS 길이
+        HashSet<Integer> set = new HashSet<>(); // LIS를 구성하는 전깃줄을 저장할 set
         for (Pair now = LIS[length]; now != null; now = now.prev) {
             set.add(now.a);
         }
@@ -92,6 +92,7 @@ public class BOJ_2568_전깃줄2 {
         System.out.println(sb);
     }
 
+    // lower-bound 이분탐색 메서드
     private static int binarySearchLowerBound(int value, int hi) {
         int lo = 1;
         while (lo < hi) {
