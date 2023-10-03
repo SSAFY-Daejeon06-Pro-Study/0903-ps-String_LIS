@@ -1,7 +1,6 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -40,8 +39,8 @@ public class BOJ_5052_전화번호목록 {
     static final String NO = "NO";
     static Node root = new Node();
     static class Node {
-        boolean data;
-        Node[] children;
+        boolean data; // 현재 노드에서 끝나는 단어가 있는 경우 true
+        Node[] children; // 현재 노드 다음에 이어지는 글자 0 ~ 9
 
         public Node() {
             this.children = new Node[10];
@@ -55,8 +54,8 @@ public class BOJ_5052_전화번호목록 {
 
         while (t-- > 0) {
             int N = Integer.parseInt(br.readLine());
-            Arrays.fill(root.children, null);
-            boolean isPrefix = false;
+            Arrays.fill(root.children, null); // 테케마다 root 초기화
+            boolean isPrefix = false; // 접두사가 있는지 여부
             while (N-- > 0) {
                 String num = br.readLine();
                 if (isPrefix) continue;
@@ -73,19 +72,17 @@ public class BOJ_5052_전화번호목록 {
 
     private static boolean fillTrie(String num, int idx, Node node) {
         if (idx == num.length()) {
-            for (int i = 0; i < 10; i++) {
-                if (node.children[i] != null) return true;
-            }
-            node.data = true;
-            return false;
+            for (int i = 0; i < 10; i++) if (node.children[i] != null) return true; // 이미 여기까지 저장했던 단어가 있는 경우 접두사 true 반환
+            node.data = true; // 현재 노드에서 끝나는 단어가 있다고 표시
+            return false; // 접두사 false 반환
         }
-        if (node.data) return true;
+        if (node.data) return true; // 접두사가 있다면 true 반환
         int nowValue = num.charAt(idx) - '0';
         if (node.children[nowValue] == null) {
             node.children[nowValue] = new Node();
         }
 
-        return fillTrie(num, idx + 1, node.children[nowValue]);
+        return fillTrie(num, idx + 1, node.children[nowValue]); // 다음 깊이로 재귀
     }
 
 }
